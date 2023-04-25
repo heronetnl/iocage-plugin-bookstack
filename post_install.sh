@@ -18,24 +18,24 @@ DB_PASS=$(openssl rand -base64 16)
 Hostname=book.local
 
 # Echo out an information message to both the command line and log file
-function info_msg(){
+info_msg(){
   echo "$1"
 }
 
 # set hostname
-function set_hostname(){
+set_hostname(){
   hostname $Hostname
 }
 
 # Enable autostart for php, nginx and mysql
-function run_autostart(){
+run_autostart(){
   sysrc -f /etc/rc.conf nginx_enable="YES"
   sysrc -f /etc/rc.conf mysql_enable="YES"
   sysrc -f /etc/rc.conf php_fpm_enable="YES"
 }
 
 # Setup php-fpm 
-function setup_php-fpm(){
+setup_php-fpm(){
   cp /usr/local/etc/php.ini-production /usr/local/etc/php.ini
   sed -i '' 's|listen = 127.0.0.1:9000|listen = /var/run/php-fpm.sock|' /usr/local/etc/php-fpm.d/www.conf
   sed -i '' 's/;listen.owner = www/listen.owner = www/' /usr/local/etc/php-fpm.d/www.conf
@@ -45,14 +45,14 @@ function setup_php-fpm(){
 }
 
 # Start the service
-function start_service(){
+start_service(){
   service nginx start
   service php-fpm start
   service mysql-server start
 }
 
 # Set up database
-function run_database_setup(){
+run_database_setup(){
   mysql -u root -e "CREATE DATABASE bookstack;"
   mysql -u root -e "CREATE USER 'bookstack'@'localhost' IDENTIFIED BY '$DB_PASS';"
   mysql -u root -e "GRANT ALL ON bookstack.* TO 'bookstack'@'localhost';"
@@ -60,7 +60,7 @@ function run_database_setup(){
 }
 
 # Install composer
-function run_install_composer(){
+run_install_composer(){
   EXPECTED_CHECKSUM="$(php -r 'copy("https://composer.github.io/installer.sig", "php://stdout");')"
   php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
   ACTUAL_CHECKSUM="$(php -r "echo hash_file('sha384', 'composer-setup.php');")"
@@ -80,19 +80,19 @@ function run_install_composer(){
 }
 
 # Download BookStack
-function run_bookstack_download(){
+run_bookstack_download(){
   cd /usr/local/www || exit
   git clone https://github.com/BookStackApp/BookStack.git --branch release --single-branch bookstack
 }
 
 # Run the BookStack database migrations for the first time
-function run_bookstack_database_migrations(){
+run_bookstack_database_migrations(){
   cd "$BOOKSTACK_DIR" || exit
   php artisan migrate --no-interaction --force
 }
 
 # Copy and update BookStack environment variables
-function run_update_bookstack_env(){
+run_update_bookstack_env(){
   cd "$BOOKSTACK_DIR" || exit
   cp .env.example .env
   sed -i.bak "s@APP_URL=.*\$@APP_URL=http://$Hostname@" .env
@@ -107,7 +107,7 @@ function run_update_bookstack_env(){
 # Sets current user as owner user and www-data as owner group then
 # provides group write access only to required directories.
 # Hides the `.env` file so it's not visible to other users on the system.
-function run_set_application_file_permissions(){
+run_set_application_file_permissions(){
   cd "$BOOKSTACK_DIR" || exit
   chown -R www:www ./
   chmod -R 755 ./
@@ -119,7 +119,7 @@ function run_set_application_file_permissions(){
 }
 
 # Reload configs
-function reload_config(){
+reload_config(){
 service php-fpm restart
 service nginx reload
 }
