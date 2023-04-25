@@ -33,13 +33,6 @@ function set_hostname(){
   hostname $Hostname
 }
 
-# Install core system packages
-function run_package_installs() {
-  
-}
-
-
-
 # Enable autostart for php, nginx and mysql
 function run_autostart(){
   sysrc -f /etc/rc.conf nginx_enable="YES"
