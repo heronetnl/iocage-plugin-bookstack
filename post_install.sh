@@ -9,11 +9,6 @@ SCRIPT_USER="${SUDO_USER:-$USER}"
 
 echo "$SCRIPT_USER"
 
-# Generate a path for a log file to output into for debugging
-TODAY=`date +"%Y%m%d"
-LOGDIR='/root'
-LOGPATH="${LOGDIR}/bookstack_install_${TODAY}.log"
-
 # The directory to install BookStack into
 BOOKSTACK_DIR="/usr/local/www/bookstack"
 
@@ -25,13 +20,13 @@ Hostname=book.local
 # Echo out an error message to the command line and exit the program
 # Also logs the message to the log file
 function error_out() {
-  echo "ERROR: $1" | tee -a "$LOGPATH" 1>&2
+  echo "ERROR: $1"
   exit 1
 }
 
 # Echo out an information message to both the command line and log file
 function info_msg() {
-  echo "$1" | tee -a "$LOGPATH"
+  echo "$1"
 }
 
 # set hostname
@@ -136,41 +131,40 @@ service php-fpm restart
 service nginx reload
 }
 
-info_msg "This script logs full output to $LOGPATH which may help upon issues."
 sleep 1
 
 info_msg "[1/11] Set hostname"
-set_hostname >> "$LOGPATH" 2>&1
+set_hostname
 
 info_msg "[2/11] Enable autostart for php, nginx and mysql"
-run_autostart >> "$LOGPATH" 2>&1
+run_autostart
 
 info_msg "[3/11] Setup php-fpm"
-setup_php-fpm >> "$LOGPATH" 2>&1
+setup_php-fpm
 
 info_msg "[4/11] Start the service"
-start_service >> "$LOGPATH" 2>&1
+start_service
 
 info_msg "[5/11] Set up database"
-run_database_setup >> "$LOGPATH" 2>&1
+run_database_setup
 
 info_msg "[6/11] Install composer"
-run_install_composer >> "$LOGPATH" 2>&1
+run_install_composer
 
 info_msg "[7/11] Download BookStack"
-run_bookstack_download >> "$LOGPATH" 2>&1
+run_bookstack_download
 
 info_msg "[8/11] Run the BookStack database migrations for the first time"
-run_bookstack_database_migrations >> "$LOGPATH" 2>&1
+run_bookstack_database_migrations
 
 info_msg "[9/11] Copy and update BookStack environment variables"
-run_update_bookstack_env >> "$LOGPATH" 2>&1
+run_update_bookstack_env
 
 info_msg "[10/11] Set file and folder permissions"
-run_set_application_file_permissions >> "$LOGPATH" 2>&1
+run_set_application_file_permissions
 
 info_msg "[11/11] Reload configs"
-reload_config >> "$LOGPATH" 2>&1
+reload_config
 
 touch /root/PLUGIN_INFO
 echo "DATABASE_NAME=bookstack" >> /root/PLUGIN_INFO
