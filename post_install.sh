@@ -4,6 +4,11 @@ echo "This script installs a new BookStack instance on a fresh Freenas."
 echo "This script does not ensure system security."
 echo ""
 
+# Get the current user running the script
+SCRIPT_USER="${SUDO_USER:-$USER}"
+
+echo "$SCRIPT_USER"
+
 # Generate a path for a log file to output into for debugging
 LOGPATH=$(/usr/local "bookstack_install_$(date +%s).log")
 
