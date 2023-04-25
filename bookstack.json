@@ -1,0 +1,28 @@
+{
+  "name": "bookstack",
+  "plugin_schema": "2",
+  "artifact": "https://github.com/heronetnl/iocage-plugin-bookstack.git",
+  "release": "13.1-RELEASE",
+  "pkgs": [
+  "php82", "php82-mbstring", "php82-tokenizer", "php82-pdo", "php82-pdo_mysql",
+  "php82-phar", "php82-filter", "php82-pear-doctrine-DoctrineDBAL",
+  "php82-zlib", "php82-dom", "php82-xml", "php82-xmlwriter", "php82-xmlreader",
+  "php82-pecl-imagick", "php82-curl", "php82-session", "php82-ctype",
+  "php82-iconv", "php82-gd", "php82-simplexml", "php82-zip", "php82-filter",
+  "php82-tokenizer", "php82-calendar", "php82-fileinfo", "php82-intl",
+  "php82-mysqli", "php82-phar", "php82-opcache", "php82-tidy", "nano",
+  "php82-composer", "mysql80-client", "mysql80-server", "nginx", "git",
+  "unzip", "curl", "wget", "bash", "socat"
+  ],
+  "packagesite": "http://pkg.FreeBSD.org/${ABI}/latest",
+  "fingerprints": {
+    "iocage-plugins": [
+      {
+      "function": "sha256",
+      "fingerprint": "b0170035af3acc5f3f3ae1859dc717101b4e6c1d0a794ad554928ca0cbb2f438"
+      }
+    ]
+  },
+  "official": false
+}
+
