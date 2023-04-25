@@ -10,7 +10,7 @@ SCRIPT_USER="${SUDO_USER:-$USER}"
 echo "$SCRIPT_USER"
 
 # Generate a path for a log file to output into for debugging
-LOGPATH=$(/usr/local "bookstack_install_$(date +%s).log")
+LOGPATH=$(/root/ "bookstack_install_$(date +%s).log")
 
 # The directory to install BookStack into
 BOOKSTACK_DIR="/usr/local/www/bookstack"
