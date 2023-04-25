@@ -30,39 +30,46 @@ function info_msg() {
 
 # set hostname
 function set_hostname(){
-    hostname $Hostname
+  hostname $Hostname
 }
+
+# Install core system packages
+function run_package_installs() {
+  
+}
+
+
 
 # Enable autostart for php, nginx and mysql
 function run_autostart(){
-    sysrc -f /etc/rc.conf nginx_enable="YES"
-    sysrc -f /etc/rc.conf mysql_enable="YES"
-    sysrc -f /etc/rc.conf php_fpm_enable="YES"
+  sysrc -f /etc/rc.conf nginx_enable="YES"
+  sysrc -f /etc/rc.conf mysql_enable="YES"
+  sysrc -f /etc/rc.conf php_fpm_enable="YES"
 }
 
 # Setup php-fpm
 function setup_php-fpm(){
-    cp /usr/local/etc/php.ini-production /usr/local/etc/php.ini
-    sed -i '' 's|listen = 127.0.0.1:9000|listen = /var/run/php-fpm.sock|' /usr/local/etc/php-fpm.d/www.conf
-    sed -i '' 's/;listen.owner = www/listen.owner = www/' /usr/local/etc/php-fpm.d/www.conf
-    sed -i '' 's/;listen.group = www/listen.group = www/' /usr/local/etc/php-fpm.d/www.conf
-    sed -i '' 's/;listen.mode = 0660/listen.mode = 0660/' /usr/local/etc/php-fpm.d/www.conf
-    sed -i '' 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/' /usr/local/etc/php.ini
+  cp /usr/local/etc/php.ini-production /usr/local/etc/php.ini
+  sed -i '' 's|listen = 127.0.0.1:9000|listen = /var/run/php-fpm.sock|' /usr/local/etc/php-fpm.d/www.conf
+  sed -i '' 's/;listen.owner = www/listen.owner = www/' /usr/local/etc/php-fpm.d/www.conf
+  sed -i '' 's/;listen.group = www/listen.group = www/' /usr/local/etc/php-fpm.d/www.conf
+  sed -i '' 's/;listen.mode = 0660/listen.mode = 0660/' /usr/local/etc/php-fpm.d/www.conf
+  sed -i '' 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/' /usr/local/etc/php.ini
 }
 
 # Start the service
 function start_service(){
-    service nginx start
-    service php-fpm start
-    service mysql-server start
+  service nginx start
+  service php-fpm start
+  service mysql-server start
 }
 
 # Set up database
 function run_database_setup() {
-    mysql -u root -e "CREATE DATABASE bookstack;"
-    mysql -u root -e "CREATE USER 'bookstack'@'localhost' IDENTIFIED BY '$DB_PASS';"
-    mysql -u root -e "GRANT ALL ON bookstack.* TO 'bookstack'@'localhost';"
-    mysql -u root -e "FLUSH PRIVILEGES;"
+  mysql -u root -e "CREATE DATABASE bookstack;"
+  mysql -u root -e "CREATE USER 'bookstack'@'localhost' IDENTIFIED BY '$DB_PASS';"
+  mysql -u root -e "GRANT ALL ON bookstack.* TO 'bookstack'@'localhost';"
+  mysql -u root -e "FLUSH PRIVILEGES;"
 }
 
 # Install composer
@@ -73,9 +80,9 @@ function run_install_composer() {
 
   if [ "$EXPECTED_CHECKSUM" != "$ACTUAL_CHECKSUM" ]
   then
-      >&2 echo 'ERROR: Invalid composer installer checksum'
-      rm composer-setup.php
-      exit 1
+    >&2 echo 'ERROR: Invalid composer installer checksum'
+    rm composer-setup.php
+    exit 1
   fi
 
   php composer-setup.php --quiet
