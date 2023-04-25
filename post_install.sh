@@ -134,51 +134,51 @@ sleep 1
 
 info_msg "[1/12] Set hostname"
 set_hostname
-sleep 10
+wait
 
 info_msg "[2/12] Enable autostart for php, nginx and mysql"
 run_autostart
-sleep 10
+wait
 
 info_msg "[3/12] Setup php-fpm"
 setup_php-fpm
-sleep 30
+wait
 
 info_msg "[4/12] Start the service"
 start_service
-sleep 10
+wait
 
 info_msg "[5/12] Set up database"
 run_database_setup
-sleep 20
+wait
 
 info_msg "[6/12] Install composer"
 run_install_composer
-sleep 30
+wait
 
 info_msg "[7/12] Download BookStack"
 run_bookstack_download
-sleep 30
+wait
 
 info_msg "[8/12] Install BookStack composer dependencies"
 run_install_bookstack_composer_deps
-sleep 60
+wait
 
 info_msg "[9/12] Run the BookStack database migrations for the first time"
 run_bookstack_database_migrations
-sleep 40
+wait
 
 info_msg "[10/12] Copy and update BookStack environment variables"
 run_update_bookstack_env
-sleep 20
+wait
 
 info_msg "[11/12] Set file and folder permissions"
 run_set_application_file_permissions
-sleep 10
+wait
 
 info_msg "[12/12] Reload configs"
 reload_config
-sleep 10
+wait
 
 touch /root/PLUGIN_INFO
 echo "DATABASE_NAME=bookstack" >> /root/PLUGIN_INFO
