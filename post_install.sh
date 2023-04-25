@@ -17,32 +17,25 @@ DB_PASS=$(openssl rand -base64 16)
 
 Hostname=book.local
 
-# Echo out an error message to the command line and exit the program
-# Also logs the message to the log file
-function error_out() {
-  echo "ERROR: $1"
-  exit 1
-}
-
 # Echo out an information message to both the command line and log file
 function info_msg() {
   echo "$1"
 }
 
 # set hostname
-function set_hostname(){
+function set_hostname() {
   hostname $Hostname
 }
 
 # Enable autostart for php, nginx and mysql
-function run_autostart(){
+function run_autostart() {
   sysrc -f /etc/rc.conf nginx_enable="YES"
   sysrc -f /etc/rc.conf mysql_enable="YES"
   sysrc -f /etc/rc.conf php_fpm_enable="YES"
 }
 
-# Setup php-fpm
-function setup_php-fpm(){
+# Setup php-fpm 
+function setup_php-fpm() {
   cp /usr/local/etc/php.ini-production /usr/local/etc/php.ini
   sed -i '' 's|listen = 127.0.0.1:9000|listen = /var/run/php-fpm.sock|' /usr/local/etc/php-fpm.d/www.conf
   sed -i '' 's/;listen.owner = www/listen.owner = www/' /usr/local/etc/php-fpm.d/www.conf
@@ -52,7 +45,7 @@ function setup_php-fpm(){
 }
 
 # Start the service
-function start_service(){
+function start_service() {
   service nginx start
   service php-fpm start
   service mysql-server start
@@ -126,7 +119,7 @@ function run_set_application_file_permissions() {
 }
 
 # Reload configs
-function reload_config(){
+function reload_config() {
 service php-fpm restart
 service nginx reload
 }
