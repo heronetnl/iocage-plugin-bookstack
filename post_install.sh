@@ -85,6 +85,12 @@ run_bookstack_download(){
   git clone https://github.com/BookStackApp/BookStack.git --branch release --single-branch bookstack
 }
 
+# Install BookStack composer dependencies
+run_install_bookstack_composer_deps(){
+  cd "$BOOKSTACK_DIR" || exit
+  php /usr/local/bin/composer install --no-dev --no-plugins
+}
+
 # Run the BookStack database migrations for the first time
 run_bookstack_database_migrations(){
   cd "$BOOKSTACK_DIR" || exit
@@ -126,47 +132,51 @@ service nginx reload
 
 sleep 1
 
-info_msg "[1/11] Set hostname"
+info_msg "[1/12] Set hostname"
 set_hostname
 sleep 10
 
-info_msg "[2/11] Enable autostart for php, nginx and mysql"
+info_msg "[2/12] Enable autostart for php, nginx and mysql"
 run_autostart
 sleep 10
 
-info_msg "[3/11] Setup php-fpm"
+info_msg "[3/12] Setup php-fpm"
 setup_php-fpm
-sleep 10
+sleep 30
 
-info_msg "[4/11] Start the service"
+info_msg "[4/12] Start the service"
 start_service
 sleep 10
 
-info_msg "[5/11] Set up database"
+info_msg "[5/12] Set up database"
 run_database_setup
-sleep 10
+sleep 20
 
-info_msg "[6/11] Install composer"
+info_msg "[6/12] Install composer"
 run_install_composer
-sleep 10
+sleep 30
 
-info_msg "[7/11] Download BookStack"
+info_msg "[7/12] Download BookStack"
 run_bookstack_download
-sleep 10
+sleep 30
 
-info_msg "[8/11] Run the BookStack database migrations for the first time"
+info_msg "[8/12] Install BookStack composer dependencies"
+run_install_bookstack_composer_deps
+sleep 60
+
+info_msg "[9/12] Run the BookStack database migrations for the first time"
 run_bookstack_database_migrations
-sleep 10
+sleep 40
 
-info_msg "[9/11] Copy and update BookStack environment variables"
+info_msg "[10/12] Copy and update BookStack environment variables"
 run_update_bookstack_env
-sleep 10
+sleep 20
 
-info_msg "[10/11] Set file and folder permissions"
+info_msg "[11/12] Set file and folder permissions"
 run_set_application_file_permissions
 sleep 10
 
-info_msg "[11/11] Reload configs"
+info_msg "[12/12] Reload configs"
 reload_config
 sleep 10
 
