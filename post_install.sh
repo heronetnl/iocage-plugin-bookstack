@@ -15,7 +15,6 @@ DB_PASS=$(openssl rand -base64 16)
 
 Hostname=book.local
 
-
 # Echo out an error message to the command line and exit the program
 # Also logs the message to the log file
 function error_out() {
