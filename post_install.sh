@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/local/bin/bash
 
 echo "This script installs a new BookStack instance on a fresh Freenas."
 echo "This script does not ensure system security."
