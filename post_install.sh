@@ -198,15 +198,15 @@ sleep 1 &
 info_msg "[8/12] Install BookStack composer dependencies"
 run_install_bookstack_composer_deps
 wait
-  
+
 sleep 1 &
-info_msg "[9/12] Run the BookStack database migrations for the first time"
-run_bookstack_database_migrations
+info_msg "[9/12] Copy and update BookStack environment variables"
+run_update_bookstack_env
 wait
   
 sleep 1 &
-info_msg "[10/12] Copy and update BookStack environment variables"
-run_update_bookstack_env
+info_msg "[10/12] Run the BookStack database migrations for the first time"
+run_bookstack_database_migrations
 wait
 
 sleep 1 &
