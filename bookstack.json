@@ -12,7 +12,7 @@
   "php82-tokenizer", "php82-calendar", "php82-fileinfo", "php82-intl",
   "php82-mysqli", "php82-phar", "php82-opcache", "php82-tidy", "nano",
   "php82-composer", "mysql80-client", "mysql80-server", "nginx", "git",
-  "unzip", "curl", "wget", "bash", "socat"
+  "unzip", "curl", "wget", "bash", "socat", "avahi-app"
   ],
   "packagesite": "http://pkg.FreeBSD.org/${ABI}/latest",
   "fingerprints": {
