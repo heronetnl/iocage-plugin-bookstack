@@ -33,7 +33,6 @@ function set_hostname(){
     exit 0
   fi
   sleep 1
-  return 1
 }
 
 # Enable autostart for php, nginx and mysql
@@ -152,13 +151,12 @@ function reload_config(){
   sleep 1
 }
 
-sleep 1
+sleep 3 &
 
 info_msg "[1/12] Set hostname"
 set_hostname
 
-sleep 2
-if ["$?" = 1 ]; then
+wait
 
   info_msg "[2/12] Enable autostart for php, nginx and mysql"
   run_autostart
