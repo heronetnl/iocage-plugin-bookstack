@@ -24,9 +24,8 @@ function info_msg(){
 function set_hostname(){
   hostname $Hostname
   host=$(hostname)
-  
-  echo "hostname = [$host] / HOSTNAME = [$HOSTNAME]"
-  if [ "$HOSTNAME" = "$Hostname"];
+ 
+  if [ "$host" = "$Hostname" ];
   then
     info_msg "Hostname set correctly"
   else
