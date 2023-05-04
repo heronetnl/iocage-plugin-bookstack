@@ -28,11 +28,11 @@ function set_hostname(){
   if [ "$host" = "$Hostname" ];
   then
     info_msg "Hostname set correctly"
-    return 1
   else
     info_msg "Can't set hostname correctly"
     exit 0
   fi
+  return 1
 }
 
 # Enable autostart for php, nginx and mysql
