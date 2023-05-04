@@ -130,7 +130,7 @@ function run_update_bookstack_env(){
   sed -i.bak "s@APP_URL=.*\$@APP_URL=http://$Hostname@" .env
   sed -i.bak 's/DB_DATABASE=.*$/DB_DATABASE=bookstack/' .env
   sed -i.bak 's/DB_USERNAME=.*$/DB_USERNAME=bookstack/' .env
-  sed -i.bak "s/DB_PASSWORD=.*\$/DB_PASSWORD=$DB_PASS/" .env
+  sed -i '' "s|DB_PASSWORD=.*\$|DB_PASSWORD=$DB_PASS|" .env
   # Generate the application key
   php artisan key:generate --no-interaction --force
   wait
