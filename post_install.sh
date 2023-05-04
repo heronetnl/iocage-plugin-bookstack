@@ -157,6 +157,7 @@ sleep 1
 info_msg "[1/12] Set hostname"
 set_hostname
 
+sleep 2
 if ["$?" = 1 ]; then
 
   info_msg "[2/12] Enable autostart for php, nginx and mysql"
