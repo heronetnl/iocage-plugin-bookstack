@@ -15,6 +15,8 @@ DB_PASS=$(openssl rand -base64 16)
 
 Hostname=book.local
 
+i = 0
+
 # Echo out an information message to both the command line and log file
 function info_msg(){
   echo "$1"
@@ -28,6 +30,7 @@ function set_hostname(){
   if [ "$host" = "$Hostname" ];
   then
     info_msg "Hostname set correctly"
+    i = 1
   else
     info_msg "Can't set hostname correctly"
     exit 0
@@ -150,43 +153,71 @@ function reload_config(){
 
 sleep 1
 
-info_msg "[1/12] Set hostname"
-set_hostname
+if [ "$i" = 0 ]; then
 
-info_msg "[2/12] Enable autostart for php, nginx and mysql"
-run_autostart
+  info_msg "[1/12] Set hostname"
+  set_hostname
+  
+elif [ "$i" = 1 ]; then
 
-info_msg "[3/12] Setup php-fpm"
-setup_php-fpm
+  info_msg "[2/12] Enable autostart for php, nginx and mysql"
+  run_autostart
+    
+elif [ "$i" = 2 ]; then
 
-info_msg "[4/12] Start the service"
-start_service
+  info_msg "[3/12] Setup php-fpm"
+  setup_php-fpm
 
-info_msg "[5/12] Set up database"
-run_database_setup
+elif [ "$i" = 3 ]; then
 
-info_msg "[6/12] Install composer"
-run_install_composer
+  info_msg "[4/12] Start the service"
+  start_service
 
-info_msg "[7/12] Download BookStack"
-run_bookstack_download
+elif [ "$i" = 4 ]; then
 
-info_msg "[8/12] Install BookStack composer dependencies"
-run_install_bookstack_composer_deps
+  info_msg "[5/12] Set up database"
+  run_database_setup
+  
+elif [ "$i" = 5 ]; then
 
-info_msg "[9/12] Run the BookStack database migrations for the first time"
-run_bookstack_database_migrations
+  info_msg "[6/12] Install composer"
+  run_install_composer
+  
+elif [ "$i" = 6 ]; then
 
-info_msg "[10/12] Copy and update BookStack environment variables"
-run_update_bookstack_env
+  info_msg "[7/12] Download BookStack"
+  run_bookstack_download
+  
+elif [ "$i" = 7 ]; then
 
-info_msg "[11/12] Set file and folder permissions"
-run_set_application_file_permissions
+  info_msg "[8/12] Install BookStack composer dependencies"
+  run_install_bookstack_composer_deps
+  
+elif [ "$i" = 8 ]; then
 
-info_msg "[12/12] Reload configs"
-reload_config
+  info_msg "[9/12] Run the BookStack database migrations for the first time"
+  run_bookstack_database_migrations
+  
+elif [ "$i" = 9 ]; then
 
-touch /root/PLUGIN_INFO
-echo "DATABASE_NAME=bookstack" >> /root/PLUGIN_INFO
-echo "DB_USERNAME=bookstack" >> /root/PLUGIN_INFO
-echo "DB_PASSWORD=$DB_PASS" >> /root/PLUGIN_INFO
+  info_msg "[10/12] Copy and update BookStack environment variables"
+  run_update_bookstack_env
+
+elif [ "$i" = 10 ]; then
+
+  info_msg "[11/12] Set file and folder permissions"
+  run_set_application_file_permissions
+
+elif [ "$i" = 11 ]; then
+
+  info_msg "[12/12] Reload configs"
+  reload_config
+  
+elif [ "$i" = 12 ]; then
+
+  touch /root/PLUGIN_INFO
+  echo "DATABASE_NAME=bookstack" >> /root/PLUGIN_INFO
+  echo "DB_USERNAME=bookstack" >> /root/PLUGIN_INFO
+  echo "DB_PASSWORD=$DB_PASS" >> /root/PLUGIN_INFO
+fi
+exit
