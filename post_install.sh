@@ -23,7 +23,7 @@ function info_msg(){
 # set hostname
 function set_hostname(){
   hostname $Hostname
-  if [ "$HOSTNAME" = $Hostname]
+  if [ "$HOSTNAME" = $Hostname];
   then
     info_msg "Hostname set correctly"
   else
