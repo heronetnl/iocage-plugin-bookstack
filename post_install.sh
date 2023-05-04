@@ -151,59 +151,69 @@ function reload_config(){
   sleep 1
 }
 
-sleep 3 &
-
+sleep 1 &
 info_msg "[1/12] Set hostname"
 set_hostname
-
 wait
 
-  info_msg "[2/12] Enable autostart for php, nginx and mysql"
-  run_autostart
-    
+sleep 1 &
+info_msg "[2/12] Enable autostart for php, nginx and mysql"
+run_autostart
+wait
 
+sleep 1 &
+info_msg "[3/12] Setup php-fpm"
+setup_php-fpm
+wait
 
-  info_msg "[3/12] Setup php-fpm"
-  setup_php-fpm
+sleep 1 &
+info_msg "[4/12] Start the service"
+start_service
+wait
 
-
-
-  info_msg "[4/12] Start the service"
-  start_service
-
-
-  info_msg "[5/12] Set up database"
-  run_database_setup
+sleep 1 &
+info_msg "[5/12] Set up database"
+run_database_setup
+wait
   
-
-  info_msg "[6/12] Install composer"
-  run_install_composer
+sleep 1 &
+info_msg "[6/12] Install composer"
+run_install_composer
+wait
   
-
-  info_msg "[7/12] Download BookStack"
-  run_bookstack_download
+sleep 1 &
+info_msg "[7/12] Download BookStack"
+run_bookstack_download
+wait
   
-
-  info_msg "[8/12] Install BookStack composer dependencies"
-  run_install_bookstack_composer_deps
+sleep 1 &
+info_msg "[8/12] Install BookStack composer dependencies"
+run_install_bookstack_composer_deps
+wait
   
-
-  info_msg "[9/12] Run the BookStack database migrations for the first time"
-  run_bookstack_database_migrations
+sleep 1 &
+info_msg "[9/12] Run the BookStack database migrations for the first time"
+run_bookstack_database_migrations
+wait
   
+sleep 1 &
+info_msg "[10/12] Copy and update BookStack environment variables"
+run_update_bookstack_env
+wait
 
-  info_msg "[10/12] Copy and update BookStack environment variables"
-  run_update_bookstack_env
+sleep 1 &
+info_msg "[11/12] Set file and folder permissions"
+run_set_application_file_permissions
+wait
 
-  info_msg "[11/12] Set file and folder permissions"
-  run_set_application_file_permissions
-
-
-  info_msg "[12/12] Reload configs"
-  reload_config
+sleep 1 &
+info_msg "[12/12] Reload configs"
+reload_config
+wait
   
-
-  touch /root/PLUGIN_INFO
-  echo "DATABASE_NAME=bookstack" >> /root/PLUGIN_INFO
-  echo "DB_USERNAME=bookstack" >> /root/PLUGIN_INFO
-  echo "DB_PASSWORD=$DB_PASS" >> /root/PLUGIN_INFO
+sleep 1 &
+touch /root/PLUGIN_INFO
+echo "DATABASE_NAME=bookstack" >> /root/PLUGIN_INFO
+echo "DB_USERNAME=bookstack" >> /root/PLUGIN_INFO
+echo "DB_PASSWORD=$DB_PASS" >> /root/PLUGIN_INFO
+wait
