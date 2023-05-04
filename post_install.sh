@@ -32,26 +32,29 @@ function set_hostname(){
     info_msg "Can't set hostname correctly"
     exit 0
   fi
+  sleep 1
   return 1
 }
 
 # Enable autostart for php, nginx and mysql
 function run_autostart(){
-  sysrc -f /etc/rc.conf nginx_enable="YES"
+  sysrc -f /etc/rc.conf nginx_enable="YES" 
   sysrc -f /etc/rc.conf mysql_enable="YES"
   sysrc -f /etc/rc.conf php_fpm_enable="YES"
   sleep 1
+  return 2
 }
 
 # Setup php-fpm 
 function setup_php-fpm(){
   cp /usr/local/etc/php.ini-production /usr/local/etc/php.ini & info_msg "Copy php.ini-producyion to php.ini"
-  sed -i '' 's|listen = 127.0.0.1:9000|listen = /var/run/php-fpm.sock|' /usr/local/etc/php-fpm.d/www.conf
-  sed -i '' 's/;listen.owner = www/listen.owner = www/' /usr/local/etc/php-fpm.d/www.conf
-  sed -i '' 's/;listen.group = www/listen.group = www/' /usr/local/etc/php-fpm.d/www.conf
-  sed -i '' 's/;listen.mode = 0660/listen.mode = 0660/' /usr/local/etc/php-fpm.d/www.conf
-  sed -i '' 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/' /usr/local/etc/php.ini
+  sed -i '' 's|listen = 127.0.0.1:9000|listen = /var/run/php-fpm.sock|' /usr/local/etc/php-fpm.d/www.conf & info_msg "Set listen to php-fpm.sock"
+  sed -i '' 's/;listen.owner = www/listen.owner = www/' /usr/local/etc/php-fpm.d/www.conf & info_msg "Set listen.owner to www"
+  sed -i '' 's/;listen.group = www/listen.group = www/' /usr/local/etc/php-fpm.d/www.conf & info_msg "Set listen.group to www"
+  sed -i '' 's/;listen.mode = 0660/listen.mode = 0660/' /usr/local/etc/php-fpm.d/www.conf & info_msg "Set listen.mode to 0660"
+  sed -i '' 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/' /usr/local/etc/php.ini & info_msg "Set cgi.fix_pathinfo to 0"
   sleep 1
+  return 3
 }
 
 # Start the service
