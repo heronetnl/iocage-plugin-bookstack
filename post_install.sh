@@ -7,8 +7,6 @@ echo ""
 # Get the current user running the script
 SCRIPT_USER="${SUDO_USER:-$USER}"
 
-echo "$SCRIPT_USER"
-
 # The directory to install BookStack into
 BOOKSTACK_DIR="/usr/local/www/bookstack"
 
@@ -25,6 +23,13 @@ function info_msg(){
 # set hostname
 function set_hostname(){
   hostname $Hostname
+  if [hostname = $Hostname]
+  then
+    info_msg "Hostname set correctly"
+  else
+    info_msg "Can't set hostname correctly"
+    exit 0
+  fi
 }
 
 # Enable autostart for php, nginx and mysql
