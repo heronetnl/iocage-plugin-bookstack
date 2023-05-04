@@ -15,7 +15,7 @@ DB_PASS=$(openssl rand -base64 16)
 
 Hostname=book.local
 
-i = 0
+i=0
 
 # Echo out an information message to both the command line and log file
 function info_msg(){
@@ -30,7 +30,7 @@ function set_hostname(){
   if [ "$host" = "$Hostname" ];
   then
     info_msg "Hostname set correctly"
-    i = 1
+    ((i+=1))
   else
     info_msg "Can't set hostname correctly"
     exit 0
