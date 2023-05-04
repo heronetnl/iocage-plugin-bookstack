@@ -32,6 +32,7 @@ function run_autostart(){
   sysrc -f /etc/rc.conf nginx_enable="YES"
   sysrc -f /etc/rc.conf mysql_enable="YES"
   sysrc -f /etc/rc.conf php_fpm_enable="YES"
+  sleep 1
 }
 
 # Setup php-fpm 
@@ -42,6 +43,7 @@ function setup_php-fpm(){
   sed -i '' 's/;listen.group = www/listen.group = www/' /usr/local/etc/php-fpm.d/www.conf
   sed -i '' 's/;listen.mode = 0660/listen.mode = 0660/' /usr/local/etc/php-fpm.d/www.conf
   sed -i '' 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/' /usr/local/etc/php.ini
+  sleep 1
 }
 
 # Start the service
@@ -49,6 +51,7 @@ function start_service(){
   service nginx start
   service php-fpm start
   service mysql-server start
+  sleep 1
 }
 
 # Set up database
@@ -57,6 +60,7 @@ function run_database_setup(){
   mysql -u root -e "CREATE USER 'bookstack'@'localhost' IDENTIFIED BY '$DB_PASS';"
   mysql -u root -e "GRANT ALL ON bookstack.* TO 'bookstack'@'localhost';"
   mysql -u root -e "FLUSH PRIVILEGES;"
+  sleep 1
 }
 
 # Install composer
@@ -77,24 +81,28 @@ function run_install_composer(){
 
   # Move composer to global installation
   mv composer.phar /usr/local/bin/composer
+  sleep 1
 }
 
 # Download BookStack
 function run_bookstack_download(){
   cd /usr/local/www || exit
   git clone https://github.com/BookStackApp/BookStack.git --branch release --single-branch bookstack
+  sleep 1
 }
 
 # Install BookStack composer dependencies
 function run_install_bookstack_composer_deps(){
   cd "$BOOKSTACK_DIR" || exit
   php /usr/local/bin/composer install --no-dev --no-plugins
+  sleep 1
 }
 
 # Run the BookStack database migrations for the first time
 function run_bookstack_database_migrations(){
   cd "$BOOKSTACK_DIR" || exit
   php artisan migrate --no-interaction --force
+  sleep 1
 }
 
 # Copy and update BookStack environment variables
@@ -107,6 +115,7 @@ function run_update_bookstack_env(){
   sed -i.bak "s/DB_PASSWORD=.*\$/DB_PASSWORD=$DB_PASS/" .env
   # Generate the application key
   php artisan key:generate --no-interaction --force
+  sleep 1
 }
 
 # Set file and folder permissions
@@ -122,12 +131,14 @@ function run_set_application_file_permissions(){
 
   # Tell git to ignore permission changes
   git config core.fileMode false
+  sleep 1
 }
 
 # Reload configs
 function reload_config(){
   service php-fpm restart
   service nginx reload
+  sleep 1
 }
 
 sleep 1
