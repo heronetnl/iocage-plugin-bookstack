@@ -40,7 +40,32 @@ function run_autostart(){
   sysrc -f /etc/rc.conf nginx_enable="YES" 
   sysrc -f /etc/rc.conf mysql_enable="YES"
   sysrc -f /etc/rc.conf php_fpm_enable="YES"
+  sysrc -f /etc/rc.conf dbus_enable="YES"
+  sysrc -f /etc/rc.conf avahi_daemon_enable="YES"
+  sysrc -f /etc/rc.conf socat_enable="YES"
   sleep 1
+}
+
+# Setup mDNS
+function setup_mDNS(){
+  sleep 1 &
+  rm /usr/local/etc/avahi/services/*.service
+  
+  cat >/usr/local/etc/avahi/services/http.service <<EOL
+<?xml version="1.0" standalone='no'?><!--*-nxml-*-->
+<!DOCTYPE service-group SYSTEM "avahi-service.dtd">
+<service-group>
+  <name replace-wildcards="yes">%h</name>
+  <service>
+    <type>_http._tcp</type>
+    <port>80</port>
+  </service>
+</service-group>
+EOL
+  echo "[jailredirect]" >> /usr/local/etc/socat-instances.conf
+  echo "daemonuser=root" >> /usr/local/etc/socat-instances.conf
+  echo 'flags="tcp-listen:80,reuseaddr,fork tcp:localhost:80"' >> /usr/local/etc/socat-instances.conf
+  wait
 }
 
 # Setup php-fpm 
@@ -63,6 +88,9 @@ function start_service(){
   sleep 5
   service mysql-server start
   sleep 5
+  service dbus start
+  service avahi-daemon start
+  service socat start jailredirect
   wait
 }
 
