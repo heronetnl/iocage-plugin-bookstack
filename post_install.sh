@@ -41,40 +41,42 @@ function run_autostart(){
   sysrc -f /etc/rc.conf mysql_enable="YES"
   sysrc -f /etc/rc.conf php_fpm_enable="YES"
   sleep 1
-  return 2
 }
 
 # Setup php-fpm 
 function setup_php-fpm(){
+  sleep 1 &
   cp /usr/local/etc/php.ini-production /usr/local/etc/php.ini & info_msg "Copy php.ini-producyion to php.ini"
   sed -i '' 's|listen = 127.0.0.1:9000|listen = /var/run/php-fpm.sock|' /usr/local/etc/php-fpm.d/www.conf & info_msg "Set listen to php-fpm.sock"
   sed -i '' 's/;listen.owner = www/listen.owner = www/' /usr/local/etc/php-fpm.d/www.conf & info_msg "Set listen.owner to www"
   sed -i '' 's/;listen.group = www/listen.group = www/' /usr/local/etc/php-fpm.d/www.conf & info_msg "Set listen.group to www"
   sed -i '' 's/;listen.mode = 0660/listen.mode = 0660/' /usr/local/etc/php-fpm.d/www.conf & info_msg "Set listen.mode to 0660"
   sed -i '' 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/' /usr/local/etc/php.ini & info_msg "Set cgi.fix_pathinfo to 0"
-  sleep 1
-  return 3
+  wait
 }
 
 # Start the service
 function start_service(){
+  sleep 1 &
   service nginx start
   service php-fpm start
   service mysql-server start
-  sleep 1
+  wait
 }
 
 # Set up database
 function run_database_setup(){
+  sleep 1 &
   mysql -u root -e "CREATE DATABASE bookstack;"
   mysql -u root -e "CREATE USER 'bookstack'@'localhost' IDENTIFIED BY '$DB_PASS';"
   mysql -u root -e "GRANT ALL ON bookstack.* TO 'bookstack'@'localhost';"
   mysql -u root -e "FLUSH PRIVILEGES;"
-  sleep 1
+  wait
 }
 
 # Install composer
 function run_install_composer(){
+  sleep 1 &
   EXPECTED_CHECKSUM="$(php -r 'copy("https://composer.github.io/installer.sig", "php://stdout");')"
   php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
   ACTUAL_CHECKSUM="$(php -r "echo hash_file('sha384', 'composer-setup.php');")"
@@ -91,32 +93,36 @@ function run_install_composer(){
 
   # Move composer to global installation
   mv composer.phar /usr/local/bin/composer
-  sleep 1
+  wait
 }
 
 # Download BookStack
 function run_bookstack_download(){
+  sleep 1 &
   cd /usr/local/www || exit
   git clone https://github.com/BookStackApp/BookStack.git --branch release --single-branch bookstack
-  sleep 1
+  wait
 }
 
 # Install BookStack composer dependencies
 function run_install_bookstack_composer_deps(){
+  sleep 1 &
   cd "$BOOKSTACK_DIR" || exit
   php /usr/local/bin/composer install --no-dev --no-plugins
-  sleep 1
+  wait
 }
 
 # Run the BookStack database migrations for the first time
 function run_bookstack_database_migrations(){
+  sleep 1 &
   cd "$BOOKSTACK_DIR" || exit
   php artisan migrate --no-interaction --force
-  sleep 1
+  wait
 }
 
 # Copy and update BookStack environment variables
 function run_update_bookstack_env(){
+  sleep 1 &
   cd "$BOOKSTACK_DIR" || exit
   cp .env.example .env
   sed -i.bak "s@APP_URL=.*\$@APP_URL=http://$Hostname@" .env
@@ -125,7 +131,7 @@ function run_update_bookstack_env(){
   sed -i.bak "s/DB_PASSWORD=.*\$/DB_PASSWORD=$DB_PASS/" .env
   # Generate the application key
   php artisan key:generate --no-interaction --force
-  sleep 1
+  wait
 }
 
 # Set file and folder permissions
@@ -133,6 +139,7 @@ function run_update_bookstack_env(){
 # provides group write access only to required directories.
 # Hides the `.env` file so it's not visible to other users on the system.
 function run_set_application_file_permissions(){
+  sleep 1 &
   cd "$BOOKSTACK_DIR" || exit
   chown -R www:www ./
   chmod -R 755 ./
@@ -141,14 +148,15 @@ function run_set_application_file_permissions(){
 
   # Tell git to ignore permission changes
   git config core.fileMode false
-  sleep 1
+  wait
 }
 
 # Reload configs
 function reload_config(){
+  sleep 1 &
   service php-fpm restart
   service nginx reload
-  sleep 1
+  wait
 }
 
 sleep 1 &
