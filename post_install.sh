@@ -44,7 +44,7 @@ function run_autostart(){
 
 # Setup php-fpm 
 function setup_php-fpm(){
-  cp /usr/local/etc/php.ini-production /usr/local/etc/php.ini
+  cp /usr/local/etc/php.ini-production /usr/local/etc/php.ini & msg_info "Copy php.ini-producyion to php.ini"
   sed -i '' 's|listen = 127.0.0.1:9000|listen = /var/run/php-fpm.sock|' /usr/local/etc/php-fpm.d/www.conf
   sed -i '' 's/;listen.owner = www/listen.owner = www/' /usr/local/etc/php-fpm.d/www.conf
   sed -i '' 's/;listen.group = www/listen.group = www/' /usr/local/etc/php-fpm.d/www.conf
