@@ -62,7 +62,9 @@ function start_service(){
   sleep 1 &
   service nginx start
   service php-fpm start
+  sleep 5
   service mysql-server start
+  sleep 5
   wait
 }
 
