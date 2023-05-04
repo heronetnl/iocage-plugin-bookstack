@@ -30,7 +30,7 @@ function set_hostname(){
   if [ "$host" = "$Hostname" ];
   then
     info_msg "Hostname set correctly"
-    ((i+=1))
+    ((i=i+1))
   else
     info_msg "Can't set hostname correctly"
     exit 0
